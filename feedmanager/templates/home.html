@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Feed Manager - Home
+{% endblock %}
+
+{% block content %}
+<section class="d-flex">
+    <div class="container">
+        <table class="table table-sm table-striped">
+            <tr>
+                <th>Title</th>
+                <th>Number of Posts</th>
+                <th>Last Publish Date</th>
+            </tr>
+            {% for f in feed_list %}
+            <tr>
+                <td>{{ f.title }}</td>
+                <td>{{ f.posts.count }}</td>
+                <td>{{ f.last_pub_date|date:'Y/m/d' }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</section>
+{% endblock %}
