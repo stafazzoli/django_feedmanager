@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  rabbitmq:
+    image: rabbitmq:latest
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+  web:
+    build: .
+    command: bash -c "python /app/manage.py migrate --noinput && python /app/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_DEBUG=True
+      - SECRET_KEY=${SECRET_KEY}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
+    depends_on:
+      - rabbitmq
+  celery:
+    build: .
+    command: celery -A feedmanager worker -l info
+    volumes:
+      - .:/app
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=1
+    depends_on:
+      - rabbitmq
+  celery_beat:
+    build: .
+    command: celery -A feedmanager beat -l info
+    volumes:
+      - .:/app
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=1
+    depends_on:
+      - rabbitmq
