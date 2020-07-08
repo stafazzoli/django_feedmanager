@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'rest_framework',
+    'rest_framework.authtoken',
     'accounts.apps.AccountsConfig',
     'feeds.apps.FeedsConfig',
 ]
@@ -69,6 +70,8 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTH_USER_MODEL = 'accounts.User'
 
 WSGI_APPLICATION = 'feedmanager.wsgi.application'
 
@@ -115,9 +118,14 @@ USE_TZ = True
 
 # Pagination for Django Rest Framework
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
 }
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -138,5 +146,14 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# CELERY_BROKER_URL = 'amqp://localhost'
-CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672//'
+
+CELERY_BROKER_URL = 'amqp://localhost'
+if os.environ.get('DOCKER_CONTAINER') == 1:
+    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
+
+CELERY_BEAT_SCHEDULE = {
+    'add-feed-every-five-minutes': {
+        'task': 'feeds.tasks.read_feeds',
+        'schedule': 300.0,
+    }
+}
