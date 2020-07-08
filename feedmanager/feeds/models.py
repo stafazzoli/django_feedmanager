@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
 from django.db import models
+
+from accounts.models import User
 
 
 class Feed(models.Model):
@@ -19,9 +20,10 @@ class UserFeed(models.Model):
 
     class Meta:
         unique_together = ('user', 'feed')
+        ordering = ['-pk']
 
     def __str__(self):
-        return f"user: {self.user.username} - feed: {self.feed.title}"
+        return f"user: {self.user.email} - feed: {self.feed.title}"
 
 
 class Post(models.Model):
@@ -38,12 +40,13 @@ class Post(models.Model):
 class UserPost(models.Model):
     user = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     post = models.ForeignKey(Post, related_name='users', on_delete=models.CASCADE)
-    read = models.BooleanField(default=False)
-    favourite = models.BooleanField(default=False)
-    comment = models.TextField(null=True)
+    is_read = models.BooleanField(default=False)
+    is_favourite = models.BooleanField(default=False)
+    comment = models.TextField(null=True, blank=True)
 
     class Meta:
         unique_together = ('user', 'post')
+        ordering = ['-pk']
 
     def __str__(self):
-        return f"user:  {self.user.username} - post: {self.post.title}"
+        return f"user:  {self.user.email} - post: {self.post.title}"

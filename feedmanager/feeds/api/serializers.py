@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
-from . import models
+from feeds import models
 
 
 class UserFeedSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.username')
+    user = serializers.ReadOnlyField(source='user.email')
     feed_title = serializers.CharField(source='feed.title', read_only=True)
 
     class Meta:
@@ -14,7 +14,7 @@ class UserFeedSerializer(serializers.ModelSerializer):
 
 
 class UserPostSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.username', read_only=True)
+    user = serializers.ReadOnlyField(source='user.email', read_only=True)
     post_feed_title = serializers.CharField(source='post.feed.title', read_only=True)
     post_title = serializers.CharField(source='post.title', read_only=True)
     post_desc = serializers.CharField(source='post.description', read_only=True)
@@ -23,7 +23,7 @@ class UserPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserPost
-        fields = ('id', 'user', 'read', 'favourite', 'comment',
+        fields = ('id', 'user', 'is_read', 'is_favourite', 'comment',
                   'post_feed_title', 'post_title', 'post_desc', 'post_link', 'post_pub_date',
                   )
         read_only_fields = ('user', 'post_feed_title', 'post_title', 'post_desc', 'post_pub_date',)

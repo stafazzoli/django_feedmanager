@@ -21,9 +21,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.HomeView.as_view(), name='home'),
-    path('accounts/', include('accounts.urls', namespace='accounts')),
-    path('accounts/', include('django.contrib.auth.urls')),
 
-    path('auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('feeds/', include('feeds.urls', namespace='feeds')),
+    path('api/accounts/', include('accounts.api.urls', namespace='accounts_api')),
+    path('api/feeds/', include('feeds.api.urls', namespace='feeds_api')),
 ]

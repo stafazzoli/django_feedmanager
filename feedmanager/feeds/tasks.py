@@ -19,6 +19,7 @@ def add_userpost(users, posts):
 
 @shared_task
 def read_feeds():
+    print("************** TASK START **************")
     for feed in models.Feed.objects.all():
         try:
             feed_to_parse = feedparser.parse(feed.rss)
@@ -52,3 +53,5 @@ def read_feeds():
             print(f"An error has occurred when parsing the feed of {feed.title}", e)
         finally:
             print(f"The number of new posts entered for {feed.title}: {post_count}")
+    print("************** TASK END **************")
+

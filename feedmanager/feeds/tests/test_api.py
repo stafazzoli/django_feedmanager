@@ -12,8 +12,8 @@ User = get_user_model()
 
 class UserFeedAPITestCase(APITestCase):
     def setUp(self) -> None:
-        self.user = User.objects.create_user(username='testuser', password='testpassword', email='test@test.com')
-        self.user2 = User.objects.create_user(username='testuser2', password='testpassword2', email='test2@test.com')
+        self.user = User.objects.create_user(email='test@test.com', password='testpassword')
+        self.user2 = User.objects.create_user(email='test2@test.com', password='testpassword2')
         feed = Feed.objects.create(title='test_feed',
                                    link='https://feed.com/',
                                    rss='https://feed.com/feed.xml/'
@@ -44,7 +44,7 @@ class UserFeedAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_userfeed_list_auth(self):
-        self.client.login(username=self.user.username, password='testpassword')
+        self.client.login(email=self.user.email, password='testpassword')
         data = {}
         url = api_reverse('feeds:userfeed_listcreate')
         response = self.client.get(url, data, format='json')
@@ -58,7 +58,7 @@ class UserFeedAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_create_userfeed_auth(self):
-        self.client.login(username=self.user.username, password='testpassword')
+        self.client.login(email=self.user.email, password='testpassword')
         data = {"feed": self.feed2.id, "user": self.user.id}
         url = api_reverse('feeds:userfeed_listcreate')
         response = self.client.post(url, data, format='json')
@@ -73,7 +73,7 @@ class UserFeedAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_delete_userfeed_auth_owner(self):
-        self.client.login(username=self.user.username, password='testpassword')
+        self.client.login(email=self.user.email, password='testpassword')
         data = {}
         userfeed = UserFeed.objects.first()
         url = api_reverse('feeds:userfeed_delete', kwargs={'pk': userfeed.pk})
@@ -81,7 +81,7 @@ class UserFeedAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_delete_userfeed_auth_not_owner(self):
-        self.client.login(username=self.user2.username, password='testpassword2')
+        self.client.login(email=self.user2.email, password='testpassword2')
         data = {}
         userfeed = UserFeed.objects.first()
         url = api_reverse('feeds:userfeed_delete', kwargs={'pk': userfeed.pk})
@@ -91,8 +91,8 @@ class UserFeedAPITestCase(APITestCase):
 
 class UserPostListAPITestCase(APITestCase):
     def setUp(self) -> None:
-        self.user = User.objects.create_user(username='testuser', password='testpassword', email='test@test.com')
-        self.user2 = User.objects.create_user(username='testuser2', password='testpassword2', email='test2@test.com')
+        self.user = User.objects.create_user(email='test@test.com', password='testpassword')
+        self.user2 = User.objects.create_user(email='test2@test.com', password='testpassword2')
         feed = Feed.objects.create(title='test_feed',
                                    link='https://feed.com/',
                                    rss='https://feed.com/feed.xml/'
@@ -121,7 +121,7 @@ class UserPostListAPITestCase(APITestCase):
         self.assertEqual(userpost_count, 1)
 
     def test_get_userfeed_list_auth_owner(self):
-        self.client.login(username=self.user.username, password='testpassword')
+        self.client.login(email=self.user.email, password='testpassword')
         data = {}
         url = api_reverse('feeds:userpost_list')
         response = self.client.get(url, data, format='json')
@@ -129,7 +129,7 @@ class UserPostListAPITestCase(APITestCase):
         self.assertEqual(response.data.get('count'), 1)
 
     def test_get_userfeed_list_auth_not_owner(self):
-        self.client.login(username=self.user2.username, password='testpassword2')
+        self.client.login(email=self.user2.email, password='testpassword2')
         data = {}
         url = api_reverse('feeds:userpost_list')
         response = self.client.get(url, data, format='json')
@@ -145,7 +145,7 @@ class UserPostListAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_userpost_auth_owner(self):
-        self.client.login(username=self.user.username, password='testpassword')
+        self.client.login(email=self.user.email, password='testpassword')
         data = {}
         userpost = UserPost.objects.first()
         url = api_reverse('feeds:userpost_detail', kwargs={'pk': userpost.pk})
@@ -153,7 +153,7 @@ class UserPostListAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_userpost_auth_not_owner(self):
-        self.client.login(username=self.user2.username, password='testpassword2')
+        self.client.login(email=self.user2.email, password='testpassword2')
         data = {}
         userpost = UserPost.objects.first()
         url = api_reverse('feeds:userpost_detail', kwargs={'pk': userpost.pk})
@@ -169,7 +169,7 @@ class UserPostListAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_userpost_auth_owner(self):
-        self.client.login(username=self.user.username, password='testpassword')
+        self.client.login(email=self.user.email, password='testpassword')
         data = {'read': True, 'favourite': True, 'comment': 'commnet_text'}
         userpost = UserPost.objects.first()
         url = api_reverse('feeds:userpost_detail', kwargs={'pk': userpost.pk})
@@ -177,7 +177,7 @@ class UserPostListAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_userpost_auth_not_owner(self):
-        self.client.login(username=self.user2.username, password='testpassword2')
+        self.client.login(email=self.user2.email, password='testpassword2')
         data = {'read': True, 'favourite': True, 'comment': 'commnet_text'}
         userpost = UserPost.objects.first()
         url = api_reverse('feeds:userpost_detail', kwargs={'pk': userpost.pk})

@@ -5,4 +5,4 @@ class FeedsConfig(AppConfig):
     name = 'feeds'
 
     def ready(self):
-        pass
+        import feeds.signals
