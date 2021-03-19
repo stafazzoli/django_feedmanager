@@ -6,7 +6,7 @@ Django==3.0.7
 django-celery-beat==2.0.0
 django-crispy-forms==1.9.1
 django-timezone-field==4.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 feedparser==5.2.1
 future==0.18.2
 kombu==4.6.10
