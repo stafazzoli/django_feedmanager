@@ -1,7 +1,7 @@
 # Feed Manager Web Application
 
-This web application is developed using Django, a high-level Python Web framework. This project utilizes `Python 3.8`, `Django 3.0.7`, `Django REST Framework 3.11.0`, `Celery 4.4.5`, `Celery Beat 2.0.0` and SQLite database for development.
-This project works as a backend service for an RSS scraper and feed reader application. The application saves RSS feeds to a database and lets the user view and manage his feeds via RESTful APIs. Authentication is done using uses a **token-based** HTTP Authentication scheme. 
+This web application is developed using Django, a high-level Python Web framework. This project utilizes `Python 3.8`, `Django 3.1.8`, `Django REST Framework 3.11.2`, `Celery 4.4.5`, `Celery Beat 2.0.0` and SQLite database for development.
+This project works as a backend service for an RSS scraper and feed reader application. The application saves RSS feeds to a database and lets the user view and manage his feeds via RESTful APIs. Authentication is done using a **token-based** HTTP Authentication scheme. 
 It comprises the following components:
 1. Accounts App:
     A customized the Django authentication user model that registers and authenticates the user using email (instead of username) and password.
@@ -40,8 +40,7 @@ Before building the image:
 The contents of `.env` file should be set as `KEY=VALUE`. 
 3. Run the following commands to build the images and spin up the containers respectively:
 ```shell script
-docker-compose build
-docker-compose up
+docker-compose up --build
 ```
 4. The application will be running at http://127.0.0.1:8000/
 
