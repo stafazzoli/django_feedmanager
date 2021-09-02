@@ -37,7 +37,6 @@ celery -A feedmanager beat -l info
 Before building the image:
 1. Change directory to the root project (`feedmanager`).
 2. Set up environment variables: Create a `.env` file in the root directory of the project (where `Dockerfile` and `docker-compose.yml` are located).
-The contents of `.env` file should be set as `KEY=VALUE`. 
 3. Run the following commands to build the images and spin up the containers respectively:
 ```shell script
 docker-compose up --build
